@@ -1,5 +1,5 @@
 # 需要排除的子目录
-exclude_dirs := build bin Data
+exclude_dirs := build target Data
 
 # 深度为1的目录名称
 dirs := $(shell find . -maxdepth 1 -type d)
@@ -9,7 +9,7 @@ dirs := $(filter-out $(exclude_dirs),$(dirs))
 SUBDIRS := $(dirs)
 
 TOPDIR=$(realpath .)
-INSTALLDIR := $(TOPDIR)/bin
+INSTALLDIR := $(TOPDIR)/target
 BUILDDIR := $(TOPDIR)/build
 SRCDIR := $(TOPDIR)
 
@@ -27,6 +27,7 @@ $(SUBDIRS):prepare
 	@echo $@
 	$(MD) $(BUILDDIR)/$@
 	cd $(BUILDDIR)/$@ && $(CMK) -D CMAKE_INSTALL_PREFIX=$(INSTALLDIR) $(SRCDIR)/$@
-	cd $(BUILDDIR)/$@ && $(MK)
+	cd $(BUILDDIR)/$@ && $(MK) && $(MK) install
 
+install: $(SUBDIRS)
 
